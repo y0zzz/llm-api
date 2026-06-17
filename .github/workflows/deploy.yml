@@ -1,0 +1,28 @@
+name: AI-Ops Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  CLOUDFLARE_ACCOUNT_ID: ${{ CLOUDFLARE_ACCOUNT_ID }}
+  CLOUDFLARE_API_TOKEN: ${{ CLOUDFLARE_API_TOKEN}}
+
+jobs:
+  build-and-test:
+    name: Build Docker Container
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Build Docker Image
+      run: |
+        docker build -t ai-api:local .
+
+    - name: Verify Container Structure
+      run: |
+        docker run -d -p 8080:8080 --name test-app ai-api:local
+        sleep 5
+        docker ps | grep test-app

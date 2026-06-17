@@ -1,0 +1,8 @@
+.venv
+.env
+terraform.tfvars
+.terraform
+.terraform.lock.hcl
+__pycache__
+*.pycgit status
+.env.test
