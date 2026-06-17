@@ -1,29 +1,39 @@
 # llm-api
-A lightweight LLM API service built with FastAPI, proxying requests to Cloudflare Workers AI using Llama 3.1.
+A production-grade LLM API built with Python and FastAPI that proxies prompts to multiple Cloudflare Workers AI models, with streaming, caching, authentication, persistent storage and real-time monitoring.
 
-## Technical Stack
-- **FastAPI & httpx**: Asynchronous text generation API.
-- **Docker**: Production-hardened container running as a non-root `appuser`.
-- **GitHub Actions**: Automated CI/CD container build pipeline.
+## Stack
+· Python 
+· FastAPI 
+· PostgreSQL 
+· Redis
+· Docker Compose 
+· Prometheus 
+· Grafana 
+· Terraform 
+· GitHub Actions
 
-## Local Quickstart
-\```bash
-# 1. Setup environment & install packages
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+## Endpoints
+- `POST /generate` — Generate text (cached)
+- `GET /conversations` — Conversation history
+- `GET /models` — Available models
+- `GET /health` — Health check
 
-# 2. Run the server
-uvicorn main:app --reload
-\```
-- **Health Check**: `http://127.0.0.1:8000/health`
-- **Swagger Docs**: `http://127.0.0.1:8000/docs`
+## Quickstart
+```bash
+cp .env.example .env
+docker compose up
+```
 
-## Docker Build
-\```bash
-docker build -t llm-api:v1 .
-docker run -d -p 8080:8080 -e CLOUDFLARE_ACCOUNT_ID="id" -e CLOUDFLARE_API_TOKEN="token" llm-api:v1
-\```
+## Example
+```bash
+curl -X POST http://127.0.0.1:8080/generate \
+-H "Content-Type: application/json" \
+-H "X-API-Key: your-key" \
+-d '{"prompt": "Hello!", "model": "llama-3.1-8b"}'
+```
 
-## GitHub Secrets Required
-- `CLOUDFLARE_ACCOUNT_ID`
-- `CLOUDFLARE_API_TOKEN`
+## GitHub Secrets
+· `CLOUDFLARE_ACCOUNT_ID` 
+· `CLOUDFLARE_API_TOKEN` 
+· `API_KEY` 
+· `DATABASE_URL`
