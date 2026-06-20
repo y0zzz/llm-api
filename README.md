@@ -21,6 +21,7 @@ A production-grade LLM API built with Python and FastAPI that proxies prompts to
 ## Quickstart
 ```bash
 cp .env.example .env
+# Fill in your Cloudflare credentials and API key in .env
 docker compose up
 ```
 
