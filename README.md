@@ -2,6 +2,9 @@
 
 A production-grade LLM API built with Python and FastAPI that proxies prompts to multiple Cloudflare Workers AI models, with streaming, caching, authentication, persistent storage and real-time monitoring.
 
+## How it works
+Each request first checks Redis for a cached response. On a cache hit, the answer returns instantly without contacting Cloudflare. On a miss, the prompt is routed to the selected Cloudflare Workers AI model, the response is cached for 5 minutes, and the full exchange is saved to PostgreSQL for history.
+
 ## Architecture
 ![Architecture diagram](./architecture.svg)
 
