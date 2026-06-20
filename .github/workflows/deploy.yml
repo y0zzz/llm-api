@@ -48,6 +48,11 @@ jobs:
 
     - name: Verify Container Structure
       run: |
-        docker run -d -p 8080:8080 --name test-app llm-api:local
+        docker run -d -p 8080:8080 \
+          -e CLOUDFLARE_ACCOUNT_ID=fake-id \
+          -e CLOUDFLARE_API_TOKEN=fake-token \
+          -e API_KEY=test-key \
+          -e DATABASE_URL=sqlite:///./test.db \
+          --name test-app llm-api:local
         sleep 5
         docker ps | grep test-app
