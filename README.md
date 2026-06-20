@@ -12,7 +12,7 @@
 A production-grade LLM API built with Python and FastAPI that proxies prompts to multiple Cloudflare Workers AI models, with streaming, caching, authentication, persistent storage and real-time monitoring.
 
 ## Architecture
-![Architecture diagram](./architecture.png)
+![Architecture diagram](./architecture.svg)
 
 ## Stack
 - Python 
