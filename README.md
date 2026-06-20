@@ -14,6 +14,8 @@ A production-grade LLM API built with Python and FastAPI that proxies prompts to
 
 ![Grafana](https://img.shields.io/badge/Grafana-F46800?logo=grafana&logoColor=white) ![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?logo=prometheus&logoColor=white)
 
+![License](https://img.shields.io/badge/license-MIT-green)
+
 ## Endpoints
 - `POST /generate` — Generate text (cached)
 - `GET /conversations` — Conversation history
