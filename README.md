@@ -8,6 +8,9 @@ Each request first checks Redis for a cached response. On a cache hit, the answe
 ## Architecture
 ![Architecture diagram](./architecture.svg)
 
+## Monitoring
+![Grafana Dashboard](./grafana-dashboard.png)
+
 ## Stack
 ![Python](https://img.shields.io/badge/Python-3.10-blue?logo=python&logoColor=white) ![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
 
