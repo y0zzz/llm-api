@@ -52,13 +52,28 @@ async def verify_api_key(key: str = Security(api_key_header)):
         raise HTTPException(status_code=403, detail="Invalid API Key")
     return key
 
+async def check_rate_limit(key: str = Security(api_key_header)):
+    rate_limit_key = f"rate_limit:{key}"
+    try:
+        requests = redis_client.incr(rate_limit_key)
+        if requests == 1:
+            redis_client.expire(rate_limit_key, 60)  # 60 sekunder window
+        if requests > 10:  # Max 10 requests per minut
+            logger.warning(f"Rate limit exceeded for key: {key}")
+            raise HTTPException(status_code=429, detail="Rate limit exceeded. Max 10 requests per minute.")
+    except HTTPException:
+        raise
+    except Exception:
+        logger.warning("Redis unavailable, skipping rate limit check")
+    return key
+
 class PromptRequest(BaseModel):
     prompt: str
     model: Optional[str] = "llama-3.1-8b"
     stream: Optional[bool] = False
 
 @app.post("/generate")
-async def generate_text(request: PromptRequest, key: str = Security(verify_api_key), db: Session = Depends(get_db)):
+async def generate_text(request: PromptRequest, key: str = Security(verify_api_key), db: Session = Depends(get_db), _: str = Depends(check_rate_limit)):
     logger.info(f"Received prompt using model: {request.model}")
 
     if not CLOUDFLARE_ACCOUNT_ID or not CLOUDFLARE_API_TOKEN:
