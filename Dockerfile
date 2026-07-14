@@ -22,6 +22,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Step 6: Copy the application code into the container
 COPY main.py .
 COPY database.py .
+COPY app/ ./app/
 
 # Step 7: Create a non-privileged user for security
 # Running containers as 'root' is a major DevOps security risk
