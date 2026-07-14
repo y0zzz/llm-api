@@ -5,12 +5,15 @@ A production-grade LLM API built with Python and FastAPI that proxies prompts to
 Each request first checks Redis for a cached response. On a cache hit, the answer returns instantly without contacting Cloudflare. On a miss, the prompt is routed to the selected Cloudflare Workers AI model, the response is cached for 5 minutes, and the full exchange is saved to PostgreSQL for history.
 
 ## Project Structure
+```
 app/
-api/routes/     ← endpoints (generate, conversations, models, health)
-core/           ← config and security
-services/       ← cache and LLM logic
-db/             ← models and session
-schemas/        ← request/response schemas
+├── api/
+│   └── routes/     ← endpoints (generate, conversations, models, health)
+├── core/           ← config and security
+├── services/       ← cache and LLM logic
+├── db/             ← models and session
+└── schemas/        ← request/response schemas
+```
 
 ## Architecture
 ![Architecture diagram](./architecture.svg)
