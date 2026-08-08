@@ -14,10 +14,10 @@ from app.core.config import CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_API_TOKEN, AVAILAB
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
+
 @router.post("/generate")
 async def generate_text(request: PromptRequest, key: str = Security(verify_api_key), db: Session = Depends(get_db), _: str = Depends(check_rate_limit)):
     logger.info(f"Received prompt using model: {request.model}")
-
     cached = get_cached_response(request.prompt, request.model)
     if cached:
         return {"status": "success", "response": cached, "cached": True}
@@ -43,13 +43,19 @@ async def generate_text(request: PromptRequest, key: str = Security(verify_api_k
     ai_response = await call_cloudflare(request.prompt, request.model, request.stream)
     set_cached_response(request.prompt, request.model, ai_response)
 
-    conversation = Conversation(
-        prompt=request.prompt,
-        response=ai_response,
-        model=request.model
-    )
-    db.add(conversation)
-    db.commit()
-    logger.info("Conversation saved to database")
+    # Saving conversation history is "best effort" -- if the database is
+    # unavailable or expired, the user should still get their answer.
+    try:
+        conversation = Conversation(
+            prompt=request.prompt,
+            response=ai_response,
+            model=request.model
+        )
+        db.add(conversation)
+        db.commit()
+        logger.info("Conversation saved to database")
+    except Exception as exc:
+        db.rollback()
+        logger.warning(f"Could not save conversation to database: {exc}")
 
     return {"status": "success", "response": ai_response, "cached": False}
