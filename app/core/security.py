@@ -1,3 +1,4 @@
+import os
 import redis
 import logging
 from fastapi import HTTPException, Security
@@ -5,10 +6,10 @@ from fastapi.security.api_key import APIKeyHeader
 from app.core.config import API_KEY
 
 logger = logging.getLogger(__name__)
-
 api_key_header = APIKeyHeader(name="X-API-Key")
 
-redis_client = redis.Redis(host="redis", port=6379, decode_responses=True)
+REDIS_URL = os.getenv("REDIS_URL", "redis://redis:6379")
+redis_client = redis.from_url(REDIS_URL, decode_responses=True)
 
 async def verify_api_key(key: str = Security(api_key_header)):
     if key != API_KEY:
